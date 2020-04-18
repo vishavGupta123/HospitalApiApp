@@ -54,7 +54,7 @@ module.exports.createReport = function (req, res) {
         {
           patient: req.params.id,
           doctor: decoded.username,
-          status: array[Math.floor(Math.random() * array.length)],
+          status: array[Math.floor(Math.random() * array.length)].toString(),
         },
         function (err, reportPatient) {
           if (err) {
