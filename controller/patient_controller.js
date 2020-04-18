@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const Patient = require("../model/patient");
 const Report = require("../model/report");
 
+//creating a new patient
 module.exports.registerPatient = async function (req, res) {
   const usertoken = req.headers.authorization;
   const token = usertoken.split(" ");
@@ -34,6 +35,7 @@ module.exports.registerPatient = async function (req, res) {
   }
 };
 
+//creating report for a patient
 module.exports.createReport = function (req, res) {
   const usertoken = req.headers.authorization;
   const token = usertoken.split(" ");
@@ -84,6 +86,7 @@ module.exports.createReport = function (req, res) {
   });
 };
 
+//showing all the reports of a patient from oldest to newest
 module.exports.patientReports = async function (req, res) {
   let report = await Patient.findById(req.params.id)
     .sort("-createdAt")

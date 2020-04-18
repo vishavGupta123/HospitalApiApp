@@ -1,6 +1,7 @@
 const Doctor = require("../model/doctor");
 const jwt = require("jsonwebtoken");
 
+//creating a new doctor inside the database
 module.exports.register = function (req, res) {
   Doctor.findOne({ username: req.body.username }, function (err, doctor) {
     if (err) {
@@ -32,6 +33,7 @@ module.exports.register = function (req, res) {
   });
 };
 
+//logining in the existing doctor and creating a json web token
 module.exports.login = async function (req, res) {
   try {
     let doctor = await Doctor.findOne({ username: req.body.username });
