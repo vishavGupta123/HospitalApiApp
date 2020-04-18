@@ -8,7 +8,9 @@ module.exports.registerPatient = async function (req, res) {
   const token = usertoken.split(" ");
   const decoded = jwt.verify(token[1], "corona");
   console.log(decoded);
-  let patient = await Patient.findOne({ mobileNumber: req.body.mobileNumber });
+  let patient = await Patient.findOne({
+    mobileNumber: req.body.mobileNumber,
+  }).populate("report");
 
   if (!patient) {
     let patient1 = await Patient.create({
@@ -22,15 +24,9 @@ module.exports.registerPatient = async function (req, res) {
       patient: patient1,
     });
   } else {
-    let report = patient.populate({
-      path: "report",
-      populate: {
-        path: "report",
-      },
-    });
     return res.json(200, {
       message: "patient is already registered and here are the details",
-      report: report,
+      report: patient,
     });
   }
 };
