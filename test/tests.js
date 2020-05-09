@@ -4,13 +4,15 @@ const should = chai.should();
 chai.use(chaiHttp);
 let app = require("../index");
 
+const dummyPatientId = "5e9b01b4076d0342e8679be1";
+
 describe("Hospital", () => {
   //test to check if we are getting all reports of patient
   describe("/GET patients", () => {
     it("it should get the list of all reports of patients", (done) => {
       chai
         .request(app)
-        .get("/api/patient/" + "5e9b01b4076d0342e8679be1" + "/all_reports")
+        .get("/api/patient/" + dummyPatientId + "/all_reports")
         .end((err, res) => {
           if (err) {
             done(err);
@@ -101,9 +103,7 @@ describe("Hospital", () => {
           let token = res.body.data.token;
           chai
             .request(app)
-            .post(
-              "/api/patient/" + "5e9b01b4076d0342e8679be1" + "/create_report"
-            )
+            .post("/api/patient/" + dummyPatientId + "/create_report")
             .set("Authorization", "Bearer " + token)
             .end((err, res) => {
               if (err) {
@@ -117,7 +117,7 @@ describe("Hospital", () => {
         });
     });
   });
-  //test to check if we are getting all the reports of patients with similar statuses
+  //test to check if we are getting all the reports of patients with similar status
   describe("/GET reports", () => {
     it("it should print the data of patient with same status", (done) => {
       chai
