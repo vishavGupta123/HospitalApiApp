@@ -89,6 +89,6 @@ module.exports.patientReports = async function (req, res) {
     .populate("report");
 
   return res.json(200, {
-    report: patient,
+    patient: report,
   });
 };
