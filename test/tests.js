@@ -3,7 +3,6 @@ const chaiHttp = require("chai-http");
 const should = chai.should();
 chai.use(chaiHttp);
 let app = require("../index");
-const request = require("supertest");
 
 describe("Hospital", () => {
   describe("/GET patients", () => {
@@ -17,6 +16,7 @@ describe("Hospital", () => {
           }
           res.should.have.status(200);
           res.body.should.be.a("object");
+          console.log(res.body.report);
           done();
         });
     });
@@ -66,10 +66,7 @@ describe("Hospital", () => {
   });
 
   describe("/POST Patient", () => {
-    it("it should add new patient inside the database and a doctor an only do so", (done) => {
-      let patient = {
-        mobileNumber: "123456789000",
-      };
+    it("it should add new patient inside the database and a doctor can only do so", (done) => {
       chai
         .request(app)
         .post("/api/doctor/login")
@@ -88,10 +85,10 @@ describe("Hospital", () => {
           chai
             .request(app)
             .post("/api/patient/register")
-            .set("Authorization", token)
+            .set("Authorization", "Bearer " + token)
             .type("form")
             .send({
-              mobileNumber: "12345678900",
+              mobileNumber: "12345678900000",
             })
             .end((err, res) => {
               if (err) {
@@ -99,8 +96,57 @@ describe("Hospital", () => {
               }
               res.should.have.status(200);
               res.body.should.be.a("object");
+              res.body.should.have.property("message");
+              console.log(res.body.patient);
               done();
             });
+        });
+    });
+  });
+  describe("/POST report", () => {
+    it("it should create a new report for the existing patient", (done) => {
+      chai
+        .request(app)
+        .post("/api/doctor/login")
+        .type("form")
+        .send({
+          username: "vishav",
+          password: "123",
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.have.property("data");
+          let token = res.body.data.token;
+          chai
+            .request(app)
+            .post(
+              "/api/patient/" + "5e9b01b4076d0342e8679be1" + "/create_report"
+            )
+            .set("Authorization", "Bearer " + token)
+            .end((err, res) => {
+              if (err) {
+                done(err);
+              }
+              res.should.have.status(200);
+              res.body.should.have.property("reportPatient");
+              console.log(res.body.report);
+              done();
+            });
+        });
+    });
+  });
+  describe("/GET reports", () => {
+    it("it should print the data of patient with same status", (done) => {
+      chai
+        .request(app)
+        .get("/api/reports/" + "Not-Infected")
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          res.should.have.status(200);
+          console.log(res.body.report);
+          done();
         });
     });
   });
