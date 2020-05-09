@@ -5,6 +5,7 @@ chai.use(chaiHttp);
 let app = require("../index");
 
 describe("Hospital", () => {
+  //test to check if we are getting all reports of patient
   describe("/GET patients", () => {
     it("it should get the list of all reports of patients", (done) => {
       chai
@@ -21,28 +22,7 @@ describe("Hospital", () => {
         });
     });
   });
-  describe("/POST doctors", () => {
-    it("it should create a new doctor", (done) => {
-      let doctor = {
-        username: "vishwas gupta",
-        password: "123",
-      };
-      chai
-        .request(app)
-        .post("/api/doctor/register")
-        .type("form")
-        .send(doctor)
-        .end((err, res) => {
-          if (err) {
-            console.log("Error in testing the url");
-            done(err);
-          }
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          done();
-        });
-    });
-  });
+  //test to check if a doctor is logged if credentials provided are correct
   describe("/POST doctors", () => {
     it("Is should login the doctor if it is present inside the database", (done) => {
       let doctor = {
@@ -65,6 +45,7 @@ describe("Hospital", () => {
     });
   });
 
+  //test to check whether a doctor can create a new patient if logged in
   describe("/POST Patient", () => {
     it("it should add new patient inside the database and a doctor can only do so", (done) => {
       chai
@@ -103,6 +84,7 @@ describe("Hospital", () => {
         });
     });
   });
+  //test to check if a doctor can create a new report when logged in if a patient already exist inside the database
   describe("/POST report", () => {
     it("it should create a new report for the existing patient", (done) => {
       chai
@@ -135,6 +117,7 @@ describe("Hospital", () => {
         });
     });
   });
+  //test to check if we are getting all the reports of patients with similar statuses
   describe("/GET reports", () => {
     it("it should print the data of patient with same status", (done) => {
       chai
